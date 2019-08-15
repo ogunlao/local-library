@@ -1,2 +1,20 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<div>
+  <h1>{{title}}</h1>
+  <p>Welcome to <em>LocalLibrary</em>, a very basic Express website developed as a tutorial example on the Mozilla Developer
+  Network.</p>
+
+  {{#if error}}
+    Error getting dynamic content.
+  {{ else }}
+    The library has the following record counts:
+ 
+   <ul>
+     <li><span class="has-text-weight-semibold">Books:</span>{{data.book_count}}</li>
+     <li><span class="has-text-weight-semibold">Copies:</span>{{data.book_instance_count}}</li>
+     <li><span class="has-text-weight-semibold">Copies available:</span>{{data.book_instance_available_count}}</li>
+     <li><span class="has-text-weight-semibold">Authors:</span>{{data.author_count}}</li>
+     <li><span class="has-text-weight-semibold">Genres:</span>{{data.genre_count}}</li> 
+  </ul>
+  {{/if}}
+
+</div>

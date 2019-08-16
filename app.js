@@ -18,6 +18,13 @@ mongoose.connect(mongoDB, { useNewUrlParser: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+// Require handlebars and just-handlbars-helpers
+const hbs = require('hbs');
+const H = require('just-handlebars-helpers');
+
+// Register just-handlebars-helpers with handlebars
+H.registerHelpers(hbs);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

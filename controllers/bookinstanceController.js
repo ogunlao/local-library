@@ -1,6 +1,8 @@
 const BookInstance = require('../models/bookinstance');
 const Book = require('../models/book');
+
 const validator = require("express-validator")
+const async = require('async');
 
 // Display list of all BookInstances.
 exports.bookinstance_list = function (req, res) {
@@ -41,9 +43,15 @@ exports.bookinstance_create_get = function (req, res, next) {
       // Sort books by their title
       sort_func = (a, b) => { let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0; };
       books.sort(sort_func);
+      
+      // Create a list of book status
+      bookinstance_statuses = ["Available", "Maintenance", "Loaned", "Reserved"]
 
       // Successful, so render.
-      res.render('forms/bookinstance_form', { title: 'Create BookInstance', book_list: books });
+      res.render('forms/bookinstance_form', 
+                  { title: 'Create BookInstance', 
+                  book_list: books,
+                  bookinstance_statuses: bookinstance_statuses });
     });
 
 };
@@ -90,7 +98,7 @@ exports.bookinstance_create_post = [
           
           console.log(bookinstance.book)
           // Successful, so render.
-          res.render('forms/bookinstance_form', { title: 'Create BookInstance', book_list: books, selected_book: bookinstance.book, errors: errors.array(), bookinstance: bookinstance });
+          res.render('forms/bookinstance_form', { title: 'Create Book Copy', book_list: books, selected_book: bookinstance.book, errors: errors.array(), bookinstance: bookinstance });
         });
       return;
     }
@@ -121,7 +129,35 @@ exports.bookinstance_delete_post = function (req, res) {
 
 // Display BookInstance update form on GET.
 exports.bookinstance_update_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: BookInstance update GET');
+  async.parallel({
+    bookinstance: function (callback) {
+      BookInstance.findById(req.params.id).exec(callback)
+    },
+    books: function (callback) {
+      Book.find({}, 'title').exec(callback)
+    },
+  },
+  function (err, results) {
+    if (err) { return next(err); }
+    if (results.bookinstance == null) { // No results.
+      var err = new Error('Book Copy not found');
+      err.status = 404;
+      return next(err);
+    }
+    // Success
+    // Sort books by their title
+    sort_func = (a, b) => { let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0; };
+    results.books.sort(sort_func);
+    
+    // Create a list of book status
+    bookinst_status_list = ["Available", "Maintenance", "Loaned", "Reserved"]
+
+    res.render('forms/bookinstance_form', 
+                    { title: 'Update Book Copy', 
+                      book_list: results.books, 
+                      bookinstance: results.bookinstance,
+                      bookinst_status_list: bookinst_status_list });
+  });
 };
 
 // Handle bookinstance update on POST.

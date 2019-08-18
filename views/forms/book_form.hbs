@@ -14,7 +14,7 @@
           {{#each authors}}
             {{#if book}}
               <option value={{_id}} 
-              selected={{#if (or (eqw (_id book.author)) (eqw (_id book.author._id)) )}} "selected"{{else}}"false"{{/if}}>{{name}}</option>
+              selected={{#if eqw (_id book.author._id )}} "selected"{{else}}"false"{{/if}}>{{name}}</option>
             {{else}}
               <option value={{_id}}>{{name}}</option>
             {{/if}}

@@ -185,10 +185,10 @@ exports.genre_update_post = [
     }
     else {
       // Data from form is valid.
-      // Check if Genre with same name already exists.
+      // Update Genre with same id.
       Genre.findByIdAndUpdate(req.params.id, genre, {}, function (err, thegenre) {
         if (err) { return next(err); }
-        // Successful - redirect to book detail page.
+        // Successful - redirect to genre detail page.
         res.redirect(thegenre.url);
       });
 

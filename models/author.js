@@ -19,13 +19,6 @@ AuthorSchema
     return this.family_name + ', ' + this.first_name;
   });
 
-// Virtual for author's lifespan
-AuthorSchema
-  .virtual('lifespan')
-  .get(function () {
-    return (this.date_of_death.getYear() - this.date_of_birth.getYear()).toString();
-  });
-
 // Virtual for author's URL
 AuthorSchema
   .virtual('url')
@@ -46,6 +39,14 @@ AuthorSchema
   .get(function () {
     return this.date_of_death ? moment(this.date_of_death).format('YYYY-MM-DD') : '';
   });
+
+// Virtual for author's lifespan
+AuthorSchema
+  .virtual('lifespan')
+  .get(function () {
+    return this.date_of_birth_formatted.toString() + '-' + this.date_of_death_formatted.toString();
+  });
+
 
 //Export model
 module.exports = mongoose.model('Author', AuthorSchema);

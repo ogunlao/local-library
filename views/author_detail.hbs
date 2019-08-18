@@ -1,11 +1,11 @@
 <div>
   <h1>Author: {{author.name}}</h1>
-  <p>{{author.date_of_birth_formatted}} - {{author.date_of_death_formatted}}</p>
+  <p>{{author.lifespan}}</p>
 
   <div>
     <h4>Books</h4>
     <dl>
-      {{#if author_books}}
+      {{#if author_books.length}}
       {{#each author_books}}
       <dt><a href={{url}}>{{title}}</a>
         <dd>{{summary}}</dd>
@@ -16,4 +16,6 @@
       {{/if}}
     </dl>
   </div>
+  <hr>
+  <p><a href="{{author.url}}/delete">Delete Author</a></p>
 </div>

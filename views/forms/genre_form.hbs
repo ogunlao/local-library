@@ -1,0 +1,13 @@
+<div>
+  <h1>{{title}}</h1>
+
+<form action="" method="post">
+  <div class="form-group">
+    <label for="name">Genre:</label>
+      <input id="name" class="form-control" type="text" placeholder="Fantasy, Poetry etc." required="true" name="name" value={{genre.name}}>
+      <input type="submit" class=class="button is-link"/>
+  </div>
+  
+  {{> error}}
+</form>
+</div>

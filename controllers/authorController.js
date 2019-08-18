@@ -2,6 +2,8 @@ var async = require('async');
 var Book = require('../models/book');
 var Author = require('../models/author');
 
+const validator = require('express-validator');
+
 // Display list of all Authors.
 exports.author_list = function (req, res) {
   Author.find()
@@ -38,14 +40,72 @@ exports.author_detail = function (req, res, next) {
 };
 
 // Display Author create form on GET.
-exports.author_create_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Author create GET');
+exports.author_create_get = function (req, res, next) {
+  res.render('forms/author_form', { title: 'Create Author' });
 };
 
 // Handle Author create on POST.
-exports.author_create_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Author create POST');
-};
+exports.author_create_post = [
+
+  // Validate fields.
+  validator.body('first_name').isLength({ min: 1 }).trim().withMessage('First name must be specified.')
+    .isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
+  validator.body('family_name').isLength({ min: 1 }).trim().withMessage('Family name must be specified.')
+    .isAlphanumeric().withMessage('Family name has non-alphanumeric characters.'),
+  validator.body('date_of_birth', 'Invalid date of birth').optional({ checkFalsy: true }).isISO8601(),
+  validator.body('date_of_death', 'Invalid date of death').optional({ checkFalsy: true }).isISO8601(),
+
+  // Sanitize fields.
+  validator.sanitizeBody('first_name').escape(),
+  validator.sanitizeBody('family_name').escape(),
+  validator.sanitizeBody('date_of_birth').toDate(),
+  validator.sanitizeBody('date_of_death').toDate(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+
+    // Extract the validation errors from a request.
+    const errors = validator.validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/errors messages.
+      res.render('forms/author_form', { title: 'Create Author', author: req.body, errors: errors.array() });
+      return;
+    }
+    else {
+      // Create an Author object with escaped and trimmed data.
+      var author = new Author(
+        {
+          first_name: req.body.first_name,
+          family_name: req.body.family_name,
+          date_of_birth: req.body.date_of_birth,
+          date_of_death: req.body.date_of_death
+        });
+
+      // Check if Genre with same name already exists.
+      Author.findOne(
+        { 'first_name': req.body.first_name, 
+        'last_name':req.body.last_name  
+        })
+        .exec(function (err, found_name) {
+          if (err) { return next(err); }
+
+          if (found_name) {
+            // Genre exists, redirect to its detail page.
+            res.redirect(found_name.url);
+          }
+          else {
+              // Data from form is valid.
+              author.save(function (err) {
+                if (err) { return next(err); }
+                // Successful - redirect to new author record.
+                res.redirect(author.url);
+              });
+          }
+        });
+    }
+  }
+];
 
 // Display Author delete form on GET.
 exports.author_delete_get = function (req, res) {

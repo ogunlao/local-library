@@ -107,13 +107,17 @@ exports.bookinstance_create_post = [
 
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: BookInstance delete GET');
+    res.render('forms/bookinstance_delete', { title: 'Delete Book Copy', bookinstance_id: req.params._id });
 };
 
 // Handle BookInstance delete on POST.
 exports.bookinstance_delete_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: BookInstance delete POST');
-};
+  BookInstance.findByIdAndRemove(req.body.bookinstance_id, function deleteBookInstance(err) {
+    if (err) { return next(err); }
+    // Success - go to author list
+    res.redirect('/catalog/bookinstances')
+  })
+}
 
 // Display BookInstance update form on GET.
 exports.bookinstance_update_get = function (req, res) {

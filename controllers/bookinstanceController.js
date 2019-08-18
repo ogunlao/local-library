@@ -69,6 +69,7 @@ exports.bookinstance_create_post = [
     const errors = validator.validationResult(req);
 
     // Create a BookInstance object with escaped and trimmed data.
+    console.log(req.body.book)
     var bookinstance = new BookInstance(
       {
         book: req.body.book,
@@ -82,6 +83,12 @@ exports.bookinstance_create_post = [
       Book.find({}, 'title')
         .exec(function (err, books) {
           if (err) { return next(err); }
+          
+          // Sort books by their title
+          sort_func = (a, b) => { let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0; };
+          books.sort(sort_func);
+          
+          console.log(bookinstance.book)
           // Successful, so render.
           res.render('forms/bookinstance_form', { title: 'Create BookInstance', book_list: books, selected_book: bookinstance.book, errors: errors.array(), bookinstance: bookinstance });
         });

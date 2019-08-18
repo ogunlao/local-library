@@ -3,11 +3,11 @@
   <form action="" method="post">
     <div class="form-group">
       <label for="book">Book:</label>
-      <select name="" id="book" class="form-control" placeholder="Select book" 
+      <select name="book" id="book" class="form-control" placeholder="Select book" 
         name="book" required="true">
         {{#each book_list}}
           {{#if bookinstance}}
-            <option value={{_id}} selected={{#if eqw (_id selected_book)}} "selected" {{else}}"false"{{/if}}>{{title}}</option>
+            <option value={{_id}} selected={{#if eqw (_id bookinstance.book)}} "selected"{{/if}}>{{title}}</option>
             {{else}}
             <option value={{_id}}>{{title}}</option>
           {{/if}}

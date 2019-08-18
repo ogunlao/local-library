@@ -23,7 +23,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 const hbs = require('hbs');
 // Helper for select tag in handlebar
 hbs.registerHelper('option', function (value, label, selectedValue) {
-  var selectedProperty = value == selectedValue ? 'selected="selected"' : '';
+  var selectedProperty = value == (selectedValue+"") ? 'selected="selected"' : '';
   return new hbs.SafeString('<option value="' + value + '"' + selectedProperty + '>' + label + "</option>");
 });
 const H = require('just-handlebars-helpers');

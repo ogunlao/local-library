@@ -5,23 +5,16 @@
         <label for="title">Title:</label>
         <input type="text" id="title" class="form-control" 
           placeholder='Name of book' name='title' required='true'
-            {{#if book.title}} value={{book.title}} {{else}} value=""{{/if}}>
+            {{#if book.title}} value="{{book.title}}" {{else}} value=""{{/if}}>
       </div>
       <div class="form-group">
         <label for="author">Author:</label>
         <select type="select" id="author" class="form-control" class="author" 
           placeholder='Select author' name='author' required='true'>
           {{#each authors}}
-            {{#if book}}
-              <option value={{_id}} 
-              selected={{#if eqw (_id book.author._id )}} "selected"{{else}}"false"{{/if}}>{{name}}</option>
-            {{else}}
-              <option value={{_id}}>{{name}}</option>
-            {{/if}}
-
+            {{option _id name ../book.author._id}}
           {{/each}}
-          
-          </select>
+        </select>
       </div>
           <div class="form-group">
             <label for="summary">Summary:</label>
@@ -33,7 +26,7 @@
           <div class="form-group">
             <label for="isbn">ISBN:</label>
             <input type="text" id="isbn" class="form-control" placeholder="ISBN13" 
-              name="isbn" required="true" value={{book.isbn}}>
+              name="isbn" required="true" value="{{book.isbn}}">
           </div>
           <div class="form-group">
             <label for="">Genre:</label>

@@ -1,6 +1,9 @@
 {
   "name": "local-library",
   "version": "0.0.0",
+  "engines": {
+    "node": "10.13.0"
+  },
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
@@ -9,11 +12,13 @@
   "dependencies": {
     "async": "^3.1.0",
     "bulma": "^0.7.5",
+    "compression": "^1.7.4",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-validator": "^6.1.1",
     "hbs": "~4.0.4",
+    "helmet": "^3.20.0",
     "http-errors": "~1.6.3",
     "just-handlebars-helpers": "^1.0.16",
     "moment": "^2.24.0",
